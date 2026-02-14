@@ -1,8 +1,8 @@
 package goter
 
 import (
-	errs "github.com/adagit94/gono/gotils/errors"
-	uri "github.com/adagit94/gono/gotils/uri"
+	errs "github.com/adagit94/gotils/errors"
+	uri "github.com/adagit94/gotils/uri"
 	strs "strings"
 )
 

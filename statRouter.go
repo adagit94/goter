@@ -1,7 +1,7 @@
 package goter
 
 import (
-	e "github.com/adagit94/gono/gotils/errors"
+	e "github.com/adagit94/gotils/errors"
 )
 
 type statRoutes[H any] map[string]H

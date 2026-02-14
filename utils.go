@@ -1,9 +1,9 @@
 package goter
 
 import (
+	s "github.com/adagit94/gotils/slices"
 	"slices"
 	"strings"
-	s "github.com/adagit94/gono/gotils/slices"
 )
 
 func genSegConfs(segs []string) []segmentConf {
