@@ -1,3 +1,3 @@
-# goter
+# Goter
 
-Router implemented in go. Agnostic of specific ambient context. There is faster, static variant, and dynamic, but slower one.
+Router implemented in Go. Agnostic of specific http implementation. There is faster, static variant, and dynamic, but slower one.
