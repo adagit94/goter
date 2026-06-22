@@ -1,7 +1,7 @@
 package goter
 
 import (
-	e "github.com/adagit94/gotils/errors"
+	e "github.com/adagit94/err"
 )
 
 type statRoutes[H any] map[string]H
@@ -40,13 +40,13 @@ func (router *statRouter[H]) Select(path string, method string) H {
 	routes, methodKey := router.tree[method]
 
 	if !methodKey {
-		panic(&e.CodeError{Code: e.MethodNotRegisteredCode, Message: "Method not registered."})
+		panic(&e.Err{Code: e.MethodNotRegisteredCode, Message: "Method not registered."})
 	}
 
 	handler, routeKey := routes[path]
 
 	if !routeKey {
-		panic(&e.CodeError{Code: e.RouteNotRegisteredCode, Message: "Route not registered."})
+		panic(&e.Err{Code: e.RouteNotRegisteredCode, Message: "Route not registered."})
 	}
 
 	return handler
