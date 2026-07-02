@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-func genSegConfs(segs []string) []segmentConf {
-	segsConfs := s.Map(segs, func(seg string, i int) segmentConf {
+func genSegConfs(segs []string) []*segmentConf {
+	segsConfs := s.Map(segs, func(seg string, i int) *segmentConf {
 		isDyn := strings.HasPrefix(seg, ":")
 
 		if isDyn {
@@ -15,14 +15,14 @@ func genSegConfs(segs []string) []segmentConf {
 			seg = extractedSeg
 		}
 
-		return segmentConf{segment: seg, static: !isDyn}
+		return &segmentConf{segment: seg, static: !isDyn}
 	})
 
 	return segsConfs
 }
 
-func sortRoutes[H any](confs []routeConf[H]) {
-	slices.SortFunc(confs, func(a, b routeConf[H]) int {
+func sortRoutes[H any](confs []*routeConf[H]) {
+	slices.SortFunc(confs, func(a, b *routeConf[H]) int {
 		aSegsLen, bSegsLen := len(a.segments), len(b.segments)
 		minSegs := min(aSegsLen, bSegsLen)
 

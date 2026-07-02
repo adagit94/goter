@@ -23,6 +23,7 @@ type IRouter[H any] interface {
 	Select(path string, query string, method string) (H, IParams)
 }
 
+// Creates router with support for dynamic segments & query params.
 func CreateRouter[H any]() IRouter[H] {
 	router := &router[H]{tree: make(routesTree[H])}
 	return router
@@ -34,11 +35,11 @@ type segmentConf struct {
 }
 
 type routeConf[H any] struct {
-	segments []segmentConf
+	segments []*segmentConf
 	handler  H
 }
 
-type routes[H any] map[int][]routeConf[H]
+type routes[H any] map[int][]*routeConf[H]
 
 type routesTree[H any] map[string]routes[H]
 
@@ -55,27 +56,29 @@ func (router *router[H]) registerHandler(path string, method string, handler H) 
 	}
 
 	if _, segsCountKeyExists := router.tree[method][segsCount]; !segsCountKeyExists {
-		router.tree[method][segsCount] = make([]routeConf[H], 0)
+		router.tree[method][segsCount] = make([]*routeConf[H], 0)
 	}
 
-	router.tree[method][segsCount] = append(router.tree[method][segsCount], routeConf[H]{segments: genSegConfs(segs), handler: handler})
+	router.tree[method][segsCount] = append(router.tree[method][segsCount], &routeConf[H]{segments: genSegConfs(segs), handler: handler})
 	sortRoutes(router.tree[method][segsCount])
 }
 
+// Create new route for which respective http methods handlers can be defined.
 func (router *router[H]) Route(path string) IRoute[H] {
 	route := &route[H]{path: path, registerHandler: router.registerHandler}
 	return route
 }
 
+// Select is mean't to be wrapped inside of specific http implementation entry point for incoming requests. It returns selected handler with parsed path and query parameters for a found route. It panics in case no route gets matched or method doesn't exists in register, so it's important to recover and handle such potential errors gracefully in outer code.
 func (router *router[H]) Select(path string, query string, method string) (H, IParams) {
-	segs := strs.Split(path, "/")
-	segsCount := len(segs)
 	segsCountsMap, methodKey := router.tree[method]
 
 	if !methodKey {
 		panic(&errs.Err{Code: errs.MethodNotRegisteredCode, Message: "Method not registered."})
 	}
 
+	segs := strs.Split(path, "/")
+	segsCount := len(segs)
 	routes, segsCountKey := segsCountsMap[segsCount]
 
 	if !segsCountKey {
@@ -83,7 +86,7 @@ func (router *router[H]) Select(path string, query string, method string) (H, IP
 	}
 
 	for _, routeConf := range routes {
-		pathParams := make(paramsMap)
+		pathParams := make(paramsMap[string])
 		take := true
 
 		for i, seg := range routeConf.segments {
@@ -98,11 +101,11 @@ func (router *router[H]) Select(path string, query string, method string) (H, IP
 		}
 
 		if take {
-			return routeConf.handler, &params{path: &pathParams, query: uri.ParseQueryStr(query)}
+			return routeConf.handler, &params{path: pathParams, query: uri.ParseQueryStr(query)}
 		}
 	}
 
-	panic(&errs.Err{Code: errs.HandlerNotFoundCode, Message: "Handler not found."})
+	panic(&errs.Err{Code: errs.RouteNotRegisteredCode, Message: "Route not registered."})
 }
 
 type IRoute[H any] interface {
@@ -167,22 +170,24 @@ func (route *route[H]) Trace(handler H) IRoute[H] {
 	return route
 }
 
-type paramsMap = map[string]string
-
 type IParams interface {
 	Path(param string) string
-	Query(param string) string
+	Query(param string) []string
 }
+
+type paramsMap[V ~string | ~[]string] = map[string]V
 
 type params struct {
-	path  *paramsMap
-	query *paramsMap
+	path  paramsMap[string]
+	query paramsMap[[]string]
 }
 
+// Returns path parameter for a passed key or an empty string in case it's not found.
 func (params *params) Path(param string) string {
-	return (*params.path)[param]
+	return params.path[param]
 }
 
-func (params *params) Query(param string) string {
-	return (*params.query)[param]
+// Returns query parameter for a passed key or an empty string in case it's not found.
+func (params *params) Query(param string) []string {
+	return params.query[param]
 }

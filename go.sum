@@ -1,6 +1,6 @@
 github.com/adagit94/err v0.1.0 h1:orSHYujBINH6I8cQA4VDBCKVhhrJ5J1QEH+7t6X+OP4=
 github.com/adagit94/err v0.1.0/go.mod h1:ekFIDkSXQEZCZujf+xKnkyEzMo/8nqXusCbXyCJsCV0=
-github.com/adagit94/gotils v0.2.0 h1:t7JbHhn8UDVR2/VRn154rZnNtUmgb8zH0rFaI2/MacE=
-github.com/adagit94/gotils v0.2.0/go.mod h1:Plukkimvo77WcQlIUfoHaVmIkZof15APbvLxuThhpw4=
-github.com/adagit94/t v0.1.0 h1:gWKXIsgRnxR017D5KtaQnjCSt1yUzEGRrJkkSxNDEqU=
-github.com/adagit94/t v0.1.0/go.mod h1:O3x2WmdMDEF4yAQHIa8SDqLezmBJ2BPDsTtmwhLosBQ=
+github.com/adagit94/gotils v0.3.1 h1:SR0Hs56YhVPbIX5uswL3jGljWvjbQDMr2qoMuwzTtLk=
+github.com/adagit94/gotils v0.3.1/go.mod h1:dxHsVReuHemji6mkHUopl6HP5Xsug/Cgkxe4o+zoPqA=
+github.com/adagit94/t v0.2.0 h1:ZQcKTYlSe+f8UHRXudvGalZjvv0eVmjbTknMHD2jluw=
+github.com/adagit94/t v0.2.0/go.mod h1:O3x2WmdMDEF4yAQHIa8SDqLezmBJ2BPDsTtmwhLosBQ=

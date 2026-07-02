@@ -7,6 +7,7 @@ import (
 type statRoutes[H any] map[string]H
 type statTree[H any] map[string]statRoutes[H]
 
+// Creates static, faster router (e.g. without support for dynamic segments & query params) that uses plain map matching without any sophisticated approach.
 func CreateStaticRouter[H any]() IStatRouter[H] {
 	router := &statRouter[H]{tree: make(statTree[H])}
 	return router
@@ -31,11 +32,13 @@ type IStatRouter[H any] interface {
 	Select(path string, method string) H
 }
 
+// Create new route for which respective http methods handlers can be defined.
 func (router *statRouter[H]) Route(path string) IRoute[H] {
 	route := &route[H]{path: path, registerHandler: router.registerHandler}
 	return route
 }
 
+// Select is mean't to be wrapped inside of specific http implementation entry point for incoming requests. It returns selected handler for a found route. It panics in case no route gets matched or method doesn't exists in register, so it's important to recover and handle such potential errors gracefully in outer code.
 func (router *statRouter[H]) Select(path string, method string) H {
 	routes, methodKey := router.tree[method]
 
