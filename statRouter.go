@@ -7,7 +7,7 @@ import (
 type statRoutes[H any] map[string]H
 type statTree[H any] map[string]statRoutes[H]
 
-// Creates static, faster router (e.g. without support for dynamic segments & query params) that uses plain map matching without any sophisticated approach.
+// Creates static, faster router without support for dynamic segments and other dynamic functionalities that uses plain map based string paths matching.
 func CreateStaticRouter[H any]() IStatRouter[H] {
 	router := &statRouter[H]{tree: make(statTree[H])}
 	return router
