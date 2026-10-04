@@ -1,5 +1,9 @@
 package goter
 
+import (
+	e "github.com/adagit94/err"
+)
+
 type statRoutes[H any] map[string]H
 type statTree[H any] map[string]statRoutes[H]
 
@@ -39,13 +43,13 @@ func (router *statRouter[H]) Select(path string, method string) H {
 	routes, methodKey := router.tree[method]
 
 	if !methodKey {
-		panic(&Err{Code: MethodNotRegisteredCode, Message: "Method not registered."})
+		panic(&e.Err{Code: e.MethodNotRegisteredCode, Message: "Method not registered."})
 	}
 
 	handler, routeKey := routes[path]
 
 	if !routeKey {
-		panic(&Err{Code: RouteNotRegisteredCode, Message: "Route not registered."})
+		panic(&e.Err{Code: e.RouteNotRegisteredCode, Message: "Route not registered."})
 	}
 
 	return handler
