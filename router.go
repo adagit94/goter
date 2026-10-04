@@ -1,7 +1,6 @@
 package goter
 
 import (
-	errs "github.com/adagit94/err"
 	uri "github.com/adagit94/gotils/uri"
 	strs "strings"
 )
@@ -74,7 +73,7 @@ func (router *router[H]) Select(path string, query string, method string) (H, IP
 	segsCountsMap, methodKey := router.tree[method]
 
 	if !methodKey {
-		panic(&errs.Err{Code: errs.MethodNotRegisteredCode, Message: "Method not registered."})
+		panic(&Err{Code: MethodNotRegisteredCode, Message: "Method not registered."})
 	}
 
 	segs := strs.Split(path, "/")
@@ -82,7 +81,7 @@ func (router *router[H]) Select(path string, query string, method string) (H, IP
 	routes, segsCountKey := segsCountsMap[segsCount]
 
 	if !segsCountKey {
-		panic(&errs.Err{Code: errs.RouteNotRegisteredCode, Message: "Route not registered."})
+		panic(&Err{Code: RouteNotRegisteredCode, Message: "Route not registered."})
 	}
 
 	for _, routeConf := range routes {
@@ -105,7 +104,7 @@ func (router *router[H]) Select(path string, query string, method string) (H, IP
 		}
 	}
 
-	panic(&errs.Err{Code: errs.RouteNotRegisteredCode, Message: "Route not registered."})
+	panic(&Err{Code: RouteNotRegisteredCode, Message: "Route not registered."})
 }
 
 type IRoute[H any] interface {
